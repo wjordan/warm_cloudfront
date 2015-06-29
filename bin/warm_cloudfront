@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/warm_cloudfront'
+
+if ARGV.length < 2
+  puts 'Usage: warm_cloudfront {cloudfront_subdomain} {path1} [{path2}] ...'
+  exit -1
+end
+
+cloudfront_id = ARGV.slice! 0
+paths = ARGV.to_a
+
+WarmCloudfront.new(cloudfront_id).warm(paths)

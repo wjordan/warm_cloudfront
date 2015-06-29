@@ -1,0 +1,123 @@
+# List of Amazon CloudFront edge server codes
+# Last updated: 6/28/2015
+#
+# Compiled from these sources:
+# - http://blog.domenech.org/2013/10/amazon-web-services-cloudfront-edgelocation-codes.html
+# - https://forums.aws.amazon.com/thread.jspa?threadID=86653&tstart=0&messageID=318072#318072
+# - Reference list of locations from http://aws.amazon.com/cloudfront/details/
+
+# Discrepancies:
+# - Palo Alto, CA (SFO4)
+# - Milan, Italy (MXP4)
+---
+:cloudfront:
+# United States:
+
+# Atlanta, GA
+- ATL50
+# Ashburn, VA (3)
+- IAD2
+- IAD12
+- IAD53
+# Dallas/Fort Worth, TX (2)
+- DFW3
+- DFW50
+# Hayward, CA
+- SFO9
+# Jacksonville, FL
+- JAX1
+# Los Angeles, CA (2)
+- LAX1
+- LAX3
+# Miami, FL
+#- MIA3 (retired)
+- MIA50
+# New York, NY (3)
+- JFK1
+- JFK5
+- JFK6
+# Newark, NJ
+- EWR2
+# Palo Alto, CA
+#- SFO4 (retired)
+- SFO20
+# San Jose, CA
+- SFO5
+# Seattle, WA
+#- SEA4 (retired)
+- SEA50
+# South Bend, IN
+- IND6
+# St. Louis, MO
+- STL2
+
+# Europe:
+
+# Amsterdam, The Netherlands (2)
+- AMS1
+- AMS50
+# Dublin, Ireland
+- DUB2
+# Frankfurt, Germany (3)
+- FRA2
+- FRA6
+- FRA50
+# London, England (3)
+- LHR3
+- LHR5
+- LHR50
+# Madrid, Spain
+- MAD50
+# Marseille, France
+- MRS50
+# Milan, Italy
+#- MXP4 (down/cannot resolve host?)
+# Paris, France (2)
+#- CDG3 (retired)
+- CDG50
+- CDG51
+# Stockholm, Sweden
+- ARN1
+# Warsaw, Poland
+- WAW50
+
+# Asia:
+
+# Chennai, India
+- MAA3
+# Hong Kong (2)
+#- HKG1 (retired)
+- HKG50
+- HKG51
+# Mumbai, India
+- BOM2
+# Manila, the Philippines
+- MNL50
+# Osaka, Japan
+#- NRT54 (retired)
+- NRT12
+# Seoul, Korea (2)
+- ICN50
+# Singapore (2)
+- SIN2
+- SIN3
+# Taipei, Taiwan
+- TPE50
+# Tokyo, Japan (2)
+#- NRT4 (retired)
+- NRT52
+- NRT53
+
+# Australia:
+
+# Melbourne, Australia
+- MEL50
+# Sydney, Australia
+- SYD1
+
+# South America:
+
+# São Paulo, Brazil
+- GRU1
+# Rio de Janeiro, Brazil
+- GIG50

@@ -1,9 +1,9 @@
 # WarmCloudfront
 
 This library warms up CloudFront caches with your origin server's objects.
-Provide your CloudFront subdomain id and a list of paths, and warm_cloudfront will send
-GET requests for each path to every active CloudFront edge location server,
-ensuring that your objects will be cached at all CloudFront edge location for future requests.
+Provide your CloudFront subdomain id (e.g., `abcdefg1234567` if your CloudFront distribution's Domain Name is `abcdefg1234567.cloudfront.net`) and a list of paths, and warm_cloudfront will send
+GET requests for each path to [every active CloudFront edge location server](https://github.com/wjordan/warm_cloudfront/blob/master/lib/warm_cloudfront/edge.yml),
+ensuring that your objects will be cached at all CloudFront edge locations for future requests.
 
 ## Installation
 

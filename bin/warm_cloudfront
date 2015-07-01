@@ -2,6 +2,16 @@
 
 require_relative '../lib/warm_cloudfront'
 
+if ARGV.length == 1 && ARGV[0] == 'profile'
+  WarmCloudfront.profile(true)
+  exit 0
+end
+
+if ARGV.length == 1 && ARGV[0] == 'test'
+  WarmCloudfront.profile
+  exit 0
+end
+
 if ARGV.length < 2
   puts 'Usage: warm_cloudfront {cloudfront_subdomain} {path1} [{path2}] ...'
   exit -1

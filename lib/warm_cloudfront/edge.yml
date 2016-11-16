@@ -7,10 +7,12 @@
 cloudfront:
 # United States
 
-# Atlanta, GA
-  ATL: [50]
 # Ashburn, VA
-  IAD: [2, 12, 53]
+  IAD: [12, 16, 53]
+# Atlanta, GA
+  ATL: [50, 52]
+# Chicago, IL
+  ORD: [51, 54]
 # Dallas/Fort Worth, TX
   DFW: [3, 50]
 # Hayward/Palo Alto/San Jose, CA
@@ -24,13 +26,20 @@ cloudfront:
 # New York, NY
   JFK: [1, 5, 6]
 # Newark, NJ
-  EWR: [2]
+  EWR: [50]
 # Seattle, WA
-  SEA: [50]
+  SEA: [32]
 # South Bend, IN
   IND: [6]
 # St. Louis, MO
   STL: [2]
+
+# Canada
+
+# Montreal, QC
+  # ??
+# Toronto, ON
+  YTO: [50]
 
 # Europe
 
@@ -39,7 +48,7 @@ cloudfront:
 # Dublin, Ireland
   DUB: [2]
 # Frankfurt, Germany
-  FRA: [2, 6, 50]
+  FRA: [2, 6, 50, 53, 54]
 # London, England
   LHR: [3, 5, 50]
 # Madrid, Spain
@@ -49,7 +58,7 @@ cloudfront:
 # Milan, Italy
   MXP: [4]
 # Paris, France
-  CDG: [50, 51]
+  CDG: [3, 50]
 # Stockholm, Sweden
   ARN: [1]
 # Warsaw, Poland
@@ -60,15 +69,17 @@ cloudfront:
 # Chennai, India
   MAA: [3]
 # Hong Kong
-  HKG: [50, 51]
+  HKG: [50, 51, 53]
 # Mumbai, India
-  BOM: [2]
+  BOM: [2, 51]
 # Manila, the Philippines
   MNL: [50]
+# New Delhi, India
+  DEL: [51]
 # Osaka/Tokyo, Japan
-  NRT: [12, 52, 53]
+  NRT: [12, 20, 52, 53]
 # Seoul, Korea
-  ICN: [50, 51]
+  ICN: [50, 51, 54]
 # Singapore
   SIN: [2, 3]
 # Taipei, Taiwan
@@ -84,6 +95,6 @@ cloudfront:
 # South America
 
 # São Paulo, Brazil
-  GRU: [1]
+  GRU: [1 ,50]
 # Rio de Janeiro, Brazil
   GIG: [50]

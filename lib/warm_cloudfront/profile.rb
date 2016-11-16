@@ -1,33 +1,24 @@
 require 'hashdiff'
+require 'resolv'
+require 'parallel'
 
 module WarmCloudfront
   CLOUDFRONT_LOCATIONS = YAML.load_file(File.join(__dir__, 'edge.yml'))['cloudfront']
 
   def self.profile(full_profile = false)
     valid_locations = {}
-    hydra = Typhoeus::Hydra.new
     keys = full_profile ? CLOUDFRONT_LOCATIONS.keys : CLOUDFRONT_LOCATIONS
-    keys.each do |location, edges|
+    resolv = Resolv::DNS.new(:nameserver => ['8.8.8.8', '8.8.4.4'])
+    total = full_profile ? keys.length * 60 : keys.values.flatten.length
+    Parallel.each(keys, progress: 'Profiling', in_threads: 100) do |location, edges|
       iterator = full_profile ? (1..60) : edges
       iterator.each do |x|
-        request = Typhoeus::Request.new(
-          "http://www.profile.#{location}#{x}.cloudfront.net",
-          method: 'HEAD'
-        )
-        request.on_complete do |response|
-          @progress_bar.increment
-          (valid_locations[location] ||= []).push(x) if response.code == 200
+        request = resolv.getaddress("www.profile.#{location}#{x}.cloudfront.net") rescue nil
+        if request
+          (valid_locations[location] ||= []).push(x)
         end
-        hydra.queue request
       end
     end
-    total = hydra.queued_requests.length
-    @progress_bar = ProgressBar.create(
-      title: 'Profiling',
-      total: total,
-      format: '%t %c/%C|%b>>%i| %p%%'
-    )
-    hydra.run
     valid_locations.values.map(&:sort!)
     valid_count = valid_locations.values.flatten.length
     if valid_count != CLOUDFRONT_LOCATIONS.values.flatten.count
@@ -36,7 +27,7 @@ module WarmCloudfront
       Warm.log.info "Missing locations: #{missing}" if missing
       Warm.log.info "New locations: #{new}" if new
     else
-      Warm.log.info 'Found all CloudFront locations.'
+      Warm.log.info "Found all #{total} CloudFront locations."
     end
   end
 

@@ -4,10 +4,10 @@ require 'ruby-progressbar'
 
 module WarmCloudfront
   class Warm
-    CLOUDFRONT_EDGES = YAML.load_file(File.join(__dir__, 'edge.yml'))[:cloudfront]
+    CLOUDFRONT_EDGES = YAML.load_file(File.join(__dir__, 'edge.yml'))['cloudfront']
 
     def initialize(cloudfront_id)
-      @domains = CLOUDFRONT_EDGES.map do |edge|
+      @domains = CLOUDFRONT_EDGES.map do |edge, zones|
         "#{cloudfront_id}.#{edge.downcase}.cloudfront.net"
       end
       @host = "#{cloudfront_id}.cloudfront.net"

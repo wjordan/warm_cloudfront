@@ -11,11 +11,12 @@ Gem::Specification.new do |s|
   s.authors     = ['Will Jordan']
   s.files       = Dir['lib/**/*.*'] + Dir['bin/*']
   s.license     = 'MIT'
-  s.add_dependency 'typhoeus', '~> 0.7'
-  s.add_dependency 'ruby-progressbar', '~> 1.7'
-  s.add_dependency 'hashdiff', '~> 0.2'
+  s.add_dependency 'typhoeus'
+  s.add_dependency 'parallel'
+  s.add_dependency 'ruby-progressbar'
+  s.add_dependency 'hashdiff'
   s.executables << 'warm_cloudfront'
 
-  s.add_development_dependency 'bundler', '~> 1.10'
-  s.add_development_dependency 'rake', '~> 10.0'
+  s.add_development_dependency 'bundler'
+  s.add_development_dependency 'rake'
 end

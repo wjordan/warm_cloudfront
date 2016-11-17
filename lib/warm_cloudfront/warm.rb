@@ -98,7 +98,7 @@ module WarmCloudfront
 
     def log_header(field)
       log.info "Edge\t#{field}"
-      @headers.each do |domain, results|
+      @headers.sort.each do |domain, results|
         puts "#{domain.split('.')[1].upcase}\t#{results[field] || '-'}"
       end
     end

@@ -1,52 +1,73 @@
 require 'typhoeus'
+require 'resolv'
 require 'yaml'
 require 'ruby-progressbar'
+require 'parallel'
 
 module WarmCloudfront
   class Warm
     CLOUDFRONT_EDGES = YAML.load_file(File.join(__dir__, 'edge.yml'))['cloudfront']
 
-    def initialize(cloudfront_id)
+    def initialize(cloudfront_id, host)
       @domains = CLOUDFRONT_EDGES.map do |edge, zones|
-        "#{cloudfront_id}.#{edge.downcase}.cloudfront.net"
-      end
-      @host = "#{cloudfront_id}.cloudfront.net"
+        zones.map do |zone|
+          "#{cloudfront_id}.#{edge.downcase}#{zone}.cloudfront.net"
+        end
+      end.flatten
+      @host = host
       @warmed = 0
       @errors = 0
+      @headers = {}
     end
 
     def warm(paths)
-      hydra = Typhoeus::Hydra.new
-      paths.each do |path|
+      requests = paths.map do |path|
         path = "/#{path}" if path[0] != '/'
-        @domains.each do |domain|
-          req = request("#{domain}#{path}")
-          hydra.queue req
+        @domains.map do |domain|
+          request(domain, path)
         end
-      end
+      end.flatten
 
-      total = hydra.queued_requests.length
+      total = requests.length
       @progress_bar = ProgressBar.create(
         title: 'Warming',
         total: total,
         format: '%t %c/%C|%b>>%i| %p%%'
       )
-      hydra.run
+      Parallel.each(requests, in_threads: 100) do |request|
+        request.run
+      end
       log.info "Warmed #{total} objects: #{@warmed} cache misses, #{total-@warmed-@errors} cache hits#{", #{@errors} errors" if @errors.nonzero?}."
+      log.info 'Results:'
+      log_header('Age')
+
+      %w(ETag Content-Length Last-Modified).each do |field|
+        if @headers.values.map{|h| h[field]}.uniq.length > 1
+          log.warn "#{field} inconsistent!"
+          log_header field
+        end
+      end
     end
 
-    def request(url)
+    def request(domain, path)
+      url = "https://#{@host}#{path}"
+      address = Resolv::DNS.new(nameserver: %w(8.8.8.8 8.8.4.4)).getaddress(domain)
       request = Typhoeus::Request.new(
         url,
+        resolve: Ethon::Curl.slist_append(nil,
+          "#{@host}:443:#{address}"
+        ),
         # CF separately caches GET and HEAD responses, so we must send GET requests
         headers: {
           Host: @host,
           'Accept-Encoding' => 'gzip' # CF separately caches gzip requests from non-gzip requests
-        }
+        },
+        timeout: 5
       )
       request.on_headers do |response|
         @progress_bar.increment
         if response.code == 200
+          @headers[domain] = response.headers
           @warmed += 1 if response.headers['X-Cache'] == 'Miss from cloudfront'
         elsif response.timed_out?
           log.warn "Timeout from #{url}"
@@ -61,11 +82,25 @@ module WarmCloudfront
           @errors += 1
         end
       end
+      request.on_failure do |response|
+        if response.code != 200
+          log.error "Failure: #{response.return_message}"
+          @errors += 1
+        end
+      end
+
       request.on_body do |_|
-        # We don't need to download the full body, just send the GET request
+        # We don't need to download the full body, just the headers.
         :abort
       end
       request
+    end
+
+    def log_header(field)
+      log.info "Edge\t#{field}"
+      @headers.each do |domain, results|
+        puts "#{domain.split('.')[1].upcase}\t#{results[field] || '-'}"
+      end
     end
 
     def log

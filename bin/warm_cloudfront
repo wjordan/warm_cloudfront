@@ -13,11 +13,12 @@ if ARGV.length == 1 && ARGV[0] == 'test'
 end
 
 if ARGV.length < 2
-  puts 'Usage: warm_cloudfront {cloudfront_subdomain} {path1} [{path2}] ...'
+  puts 'Usage: warm_cloudfront {cloudfront_subdomain} {host} {path1} [{path2}] ...'
   exit -1
 end
 
 cloudfront_id = ARGV.slice! 0
+host = ARGV.slice! 0
 paths = ARGV.to_a
 
-WarmCloudfront.new(cloudfront_id).warm(paths)
+WarmCloudfront.new(cloudfront_id, host).warm(paths)
